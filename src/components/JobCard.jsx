@@ -54,25 +54,26 @@ function JobCard(props) {
           />
         </div>
       </div>
-      <p className=" text-sm flex items-center text-sky-400">
-        <MdLocationCity />
+      <div className=" text-sm flex items-center mb-2">
+        <MdLocationCity size={24} />
 
         <Button
           title={company}
           link={link}
-          classes="bg-transparent text-xl font-semibold text-sky-400 px-2 underline underline-offset-4"
+          variant="link"
+          classes="text-xl font-semibold text-sky-400  underline underline-offset-4 text-sky-400 ms-2"
         />
-      </p>
+      </div>
       {location ? (
-        <div className="flex items-center">
-          <MdLocationPin />
+        <div className="flex items-center mb-2">
+          <MdLocationPin size={24} />
           <p className="ms-2">{location}</p>
         </div>
       ) : null}
       {payscale ? <p>{payscale}</p> : null}
       {contact ? (
-        <div className="flex items-center">
-          <MdPhone />
+        <div className="flex items-center mb-2">
+          <MdPhone size={24} />
           <p className="ms-2">{contact}</p>
         </div>
       ) : null}
@@ -82,7 +83,7 @@ function JobCard(props) {
           <h3 className="text-lg font-semibold py-2 text-warning-600">
             Responsibilities:{" "}
           </h3>
-          <p>{responsibility}</p>
+          <p className="whitespace-pre-wrap">{responsibility}</p>
         </>
       ) : null}
       {skills ? (
@@ -90,7 +91,7 @@ function JobCard(props) {
           <h3 className="text-lg font-semibold py-2 text-warning-600">
             Skills:{" "}
           </h3>
-          <p>{skills}</p>
+          <p className="whitespace-pre-wrap">{skills}</p>
         </>
       ) : null}
 
@@ -99,7 +100,9 @@ function JobCard(props) {
           <h3 className="text-lg font-semibold py-2 text-warning-600">
             Description:{" "}
           </h3>
-          <p className="text-gray-400 text-sm">{description}</p>
+          <p className="text-gray-400 text-sm whitespace-pre-wrap">
+            {description}
+          </p>
         </>
       ) : null}
       <Button

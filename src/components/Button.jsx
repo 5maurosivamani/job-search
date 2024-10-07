@@ -7,16 +7,16 @@ function Button({
   icon: Icon,
   iconLeft,
   iconRight,
+  variant="button",
   ...props
 }) {
-  console.log("props", props);
   return (
     <div className="flex">
-      {link ? (
+      {variant === "link" ? (
         <a
           href={link}
           target="_blank"
-          className={`bg-info text-primary-text px-5 py-2 rounded-md flex items-center ${classes}`}
+          className={`text-info rounded-md flex items-center ${classes}`}
         >
           {iconLeft ? <Icon size={24} /> : null}
           <span className={iconLeft ? "ms-1" : iconRight ? "me-1" : ""}>

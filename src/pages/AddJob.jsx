@@ -3,24 +3,51 @@ import { Button, SelectBox, TextInput } from "../components";
 import bannerImg from "../assets/banner.png";
 import { useParams } from "react-router-dom";
 
+const initialFormValue = {
+  title: "",
+  company: "",
+  location: "",
+  link: "",
+  contact: "",
+  skills: "",
+  responsibility: "",
+  description: "",
+  pay: "",
+  posted_on: getCurrentDate(),
+  status: "applied",
+};
+
+const statusOptions = [
+  {
+    label: "Status",
+    value: "",
+  },
+  {
+    label: "Applied",
+    value: "applied",
+  },
+  {
+    label: "Pending",
+    value: "pending",
+  },
+  {
+    label: "Interview",
+    value: "interview",
+  },
+  {
+    label: "Offer",
+    value: "offer",
+  },
+  {
+    label: "Rejected",
+    value: "rejected",
+  },
+];
+
 function AddJob() {
   const { id } = useParams();
 
   const currentDate = getCurrentDate();
-
-  const initialFormValue = {
-    title: "",
-    company: "",
-    location: "",
-    link: "",
-    contact: "",
-    skills: "",
-    responsibility: "",
-    description: "",
-    pay: "",
-    posted_on: getCurrentDate(),
-    status: "applied",
-  };
 
   const [formValue, setFormValue] = useState(initialFormValue);
   const [formError, setFormError] = useState({});
@@ -231,11 +258,16 @@ function AddJob() {
               <SelectBox
                 name="status"
                 onChange={handleChange}
+                options={statusOptions}
                 value={formValue?.status || "applied"}
               />
             </div>
             {/* <span></span> */}
-            <Button title="Submit" onClick={handleSubmit} classes="bg-secondary-bg" />
+            <Button
+              title="Submit"
+              onClick={handleSubmit}
+              classes="bg-secondary-bg"
+            />
           </form>
         </div>
       </div>
