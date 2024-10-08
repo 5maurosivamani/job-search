@@ -4,7 +4,6 @@ import {
   MdDelete,
   MdDone,
   MdEdit,
-  MdLink,
   MdLocationCity,
   MdLocationPin,
   MdOutlineCancel,
@@ -30,15 +29,15 @@ function JobCard(props) {
   } = props;
   return (
     <div className="px-5 py-10 rounded-lg bg-black  border-slate-100 shadow-sm shadow-white">
-      <div className="flex justify-between">
-        <h2 className="text-2xl font-bold text-gray-100">{title}</h2>
+      <div className="flex flex-col-reverse md:flex-row md:justify-between gap-3 md:gap-0">
+        <h2 className="text-2xl font-bold text-gray-100 mb-2 md:mb-0">{title}</h2>
 
-        <div className="flex">
+        <div className="flex justify-end">
           <Button
             title="Edit"
             icon={MdEdit}
             iconLeft
-            classes="bg-transparent px-3 border border-white"
+            classes="bg-transparent px-3 border border-white "
             onClick={() => {
               handleEdit(id);
             }}
@@ -78,14 +77,15 @@ function JobCard(props) {
         </div>
       ) : null}
 
-      {responsibility ? (
+      {description ? (
         <>
           <h3 className="text-lg font-semibold py-2 text-warning-600">
-            Responsibilities:{" "}
+            Description:{" "}
           </h3>
-          <p className="whitespace-pre-wrap">{responsibility}</p>
+          <p className="text-gray-400 whitespace-pre-wrap">{description}</p>
         </>
       ) : null}
+
       {skills ? (
         <>
           <h3 className="text-lg font-semibold py-2 text-warning-600">
@@ -95,16 +95,15 @@ function JobCard(props) {
         </>
       ) : null}
 
-      {description ? (
+      {responsibility ? (
         <>
           <h3 className="text-lg font-semibold py-2 text-warning-600">
-            Description:{" "}
+            Responsibilities:{" "}
           </h3>
-          <p className="text-gray-400 text-sm whitespace-pre-wrap">
-            {description}
-          </p>
+          <p className="whitespace-pre-wrap">{responsibility}</p>
         </>
       ) : null}
+
       <Button
         title={status}
         classes={`mt-5 ${

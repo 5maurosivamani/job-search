@@ -7,18 +7,38 @@ const pool = require("../db"); // Import the MySQL connection
 router.get("/", async (req, res) => {
   const page = req.query.page || 1;
   const search = req.query.search || "";
+  const status = req.query.status;
   const limit = 10;
   const offset = (page - 1) * limit;
 
   try {
-    const jobs = await pool.query(
-      `SELECT * FROM jobs_tb WHERE title LIKE ? OR company LIKE ? or location LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`,
-      [`%${search}%`, `%${search}%`, `%${search}%`, limit, offset]
-    );
+    let replaceData = [
+      `%${search}%`,
+      `%${search}%`,
+      `%${search}%`,
+      limit,
+      offset,
+    ];
+    if (status) {
+      replaceData = [status].concat(replaceData);
+    }
+
+    const jobsQuery = `SELECT * FROM jobs_tb WHERE ${
+      status ? `status=? AND` : ""
+    } (title LIKE ? OR company LIKE ? or location LIKE ?) ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+
+    const jobs = await pool.query(jobsQuery, replaceData);
+
+    replaceData = [`%${search}%`, `%${search}%`, `%${search}%`];
+    if (status) {
+      replaceData = [status].concat(replaceData);
+    }
 
     const response = await pool.query(
-      `SELECT COUNT(*) as total FROM jobs_tb WHERE title LIKE ? OR company LIKE ? or location LIKE ?`,
-      [`%${search}%`, `%${search}%`, `%${search}%`]
+      `SELECT COUNT(*) as total FROM jobs_tb WHERE ${
+        status ? `status=? AND` : ""
+      } (title LIKE ? OR company LIKE ? or location LIKE ?)`,
+      replaceData
     );
 
     res.json({ jobs: jobs[0], total: response[0][0].total });
@@ -29,13 +49,20 @@ router.get("/", async (req, res) => {
 });
 
 // GET /jobs/:id - Fetch a job by id
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
+router.get("/:param", async (req, res) => {
+  const { param } = req.params;
+  const { type } = req.query;
+  let filterBy = "id";
+
+  if (type === "filter-by-status") {
+    filterBy = "status";
+  }
 
   try {
-    const [results] = await pool.query("SELECT * FROM `jobs_tb` WHERE id = ?", [
-      id,
-    ]);
+    const [results] = await pool.query(
+      `SELECT * FROM jobs_tb WHERE ${filterBy} = ? `,
+      [param]
+    );
     if (results.length === 0) {
       return res.status(404).json({ error: "Job not found" });
     }
@@ -155,7 +182,6 @@ router.delete("/:id", async (req, res) => {
     return res.status(500).json({ error: "Error deleting job" });
   }
 });
-
 
 // Export the router to be used in other modules
 module.exports = router;

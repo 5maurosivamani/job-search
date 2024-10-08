@@ -3,7 +3,7 @@ import { Button, JobCard } from "../components";
 import { getId } from "../utils";
 import { useSelector } from "react-redux";
 import { MdPersonSearch } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 const uniqueId = getId();
 
@@ -17,12 +17,21 @@ function Jobs() {
 
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+
+  const status = searchParams.get("status");
+
   useEffect(() => {
     setPage(1);
   }, [searchQuery]);
 
   useEffect(() => {
-    fetchJobs(page, searchQuery)
+    let args = [page, searchQuery];
+    if (status) {
+      args.push(status);
+    }
+
+    fetchJobs(...args)
       .then((data) => {
         setJobs(data[0].jobs);
         setFilteredJobs(data[0].jobs);
@@ -93,9 +102,9 @@ function Jobs() {
   return (
     <div className="h-full flex flex-col">
       <h1 className="text-3xl font-bold">Jobs</h1>
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex flex-col lg:flex-row items-end justify-between lg:items-center mb-3">
         <span></span>
-        <div className="flex justify-center items-center ">
+        <div className="flex justify-center items-center mb-4 lg:mb-0">
           <p className="me-5">
             {(page - 1) * 10} -{" "}
             {Math.ceil(total / 10) === page ? total : page * 10} Records
@@ -110,7 +119,7 @@ function Jobs() {
               »
             </button>
           </div>
-          <span className="ms-5">Total  {total}</span>
+          <span className="ms-5">Total {total}</span>
         </div>
         <Button
           title="Add Job"
@@ -141,10 +150,13 @@ function Jobs() {
 export default Jobs;
 
 // fetch data from the server
-async function fetchJobs(page, searchQuery) {
+async function fetchJobs(page, searchQuery, status) {
   const res = [];
   try {
-    const apiUrl = `http://localhost:5000/jobs?page=${page}&search=${searchQuery}`;
+    const apiUrl = `http://localhost:5000/jobs?page=${page}&search=${searchQuery}${
+      status && status !== "total" ? `&status=${status}` : ""
+    }`;
+
     const response = await fetch(apiUrl);
     const data = await response.json();
 

@@ -21,6 +21,9 @@ router.get("/", async (req, res) => {
     const [rejectedJobs] = await pool.query(
       "SELECT COUNT(*) as count FROM `jobs_tb` WHERE status = 'rejected'"
     );
+    const [pendingJobs] = await pool.query(
+      "SELECT COUNT(*) as count FROM `jobs_tb` WHERE status = 'pending'"
+    );
 
     res.json({
       totalJobs: totalJobs[0].count,
@@ -28,6 +31,7 @@ router.get("/", async (req, res) => {
       interviewJobs: interviewJobs[0].count,
       offerJobs: offerJobs[0].count,
       rejectedJobs: rejectedJobs[0].count,
+      pendingJobs: pendingJobs[0].count,
     });
   } catch (error) {
     console.error("Dashboard Query Error:", error);

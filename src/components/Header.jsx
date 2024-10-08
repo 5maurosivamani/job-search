@@ -27,17 +27,18 @@ const navLinks = [
 
 function Header() {
   const [searchValue, setSearchValue] = React.useState("");
-  const [selectedLink, setSelectedLink] = React.useState("Dashboard");
 
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+
+  const [selectedLink, setSelectedLink] = React.useState(currentPath);
   useEffect(() => {
     console.log("currentPath", currentPath.split("/"));
 
-    if (currentPath.split("/")[1] !== "jobs") {
+    if (searchValue && currentPath.split("/")[1] !== "jobs") {
       navigate("/jobs");
     }
   }, [searchValue]);
@@ -57,10 +58,10 @@ function Header() {
               <Link
                 to={link.path}
                 className={`hover:text-[#57a460] transition-all ease-in ${
-                  selectedLink === link.label && "text-[#57a460]"
+                  selectedLink === link.path && "text-[#57a460]"
                 }`}
                 onClick={() => {
-                  setSelectedLink(link.label);
+                  setSelectedLink(link.path);
                 }}
               >
                 {link.label}
